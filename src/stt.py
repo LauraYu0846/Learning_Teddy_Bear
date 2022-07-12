@@ -1,17 +1,17 @@
 import pyaudio
 from ibm_watson import SpeechToTextV1
 from ibm_watson.websocket import RecognizeCallback, AudioSource
-from threading import Thread
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 from environment import stt_key, stt_url
 from queue import Queue, Full
+from websocket._exceptions import WebSocketConnectionClosedException
 
 # initialise everything
 CHUNK = 1024
 BUFF_MAX_SIZE = CHUNK * 10
 q = Queue(maxsize=int(round(BUFF_MAX_SIZE / CHUNK)))
 
-audio_source = AudioSource(q, True, True)
+
 
 
 def setup_stt():
@@ -69,9 +69,8 @@ def pyaudio_callback(in_data, frame_count, time_info, status):
     return (None, pyaudio.paContinue)
 
 
-def recognize_using_weboscket(*args):
+def recognize_using_weboscket(language_model, audio_source):
     # initialize speech to text service
-    language_model = args[0]
     speech_to_text = setup_stt()
 
     response = speech_to_text.recognize_using_websocket(audio=audio_source,
@@ -106,9 +105,8 @@ def transcribe_live_audio(language="english"):
     )
 
     stream.start_stream()
-
-    recognize_thread = Thread(target=recognize_using_weboscket, args=(model_dict[language],))
-    recognize_thread.start()
+    audio_source = AudioSource(q, True, True)
+    recognize_using_weboscket(model_dict[language], audio_source)
 
     while not mycallback.inactivity:
         pass
@@ -119,7 +117,6 @@ def transcribe_live_audio(language="english"):
     audio.terminate()
     audio_source.completed_recording()
 
-    text_string = ""
     try:
         text_string = mycallback.data['results'][0]["alternatives"][0]["transcript"]
 

@@ -30,6 +30,3 @@ def translate_language(text, output_langage):
     text = translation['translations'][0]['translation']
 
     return text
-
-
-print(translate_language("hello, how are you?", "spanish"))
