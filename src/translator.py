@@ -15,7 +15,7 @@ def setup_lt():
     return language_translator
 
 
-def translate_language(text, output_langage):
+def translate_language(text, output_language):
     language_dict = {
         "english": "en",
         "spanish": "es",
@@ -25,8 +25,9 @@ def translate_language(text, output_langage):
     language_translator = setup_lt()
     translation = language_translator.translate(
         text=text,
-        target=language_dict[output_langage]).get_result()
+        target=language_dict[output_language]).get_result()
 
     text = translation['translations'][0]['translation']
 
     return text
+

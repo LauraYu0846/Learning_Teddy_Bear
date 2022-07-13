@@ -26,6 +26,6 @@ def text_to_audio(text, language="english"):
 
 
 def play_audio_file():
-    #  Try this for your raspberry pi
+    #  Try this for raspberry pi
     # apt install mpg123
-    os.system("mpg123 speech.mp3")
+    os.system("mpg123 -q speech.mp3")

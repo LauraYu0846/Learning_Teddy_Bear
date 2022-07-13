@@ -12,8 +12,6 @@ BUFF_MAX_SIZE = CHUNK * 10
 q = Queue(maxsize=int(round(BUFF_MAX_SIZE / CHUNK)))
 
 
-
-
 def setup_stt():
     authenticator = IAMAuthenticator(stt_key)
     speech_to_text = SpeechToTextV1(
@@ -102,6 +100,7 @@ def transcribe_live_audio(language="english"):
         frames_per_buffer=CHUNK,
         stream_callback=pyaudio_callback,
         start=False
+
     )
 
     stream.start_stream()
@@ -124,3 +123,5 @@ def transcribe_live_audio(language="english"):
         text_string = ""
 
     return text_string
+
+# print(transcribe_live_audio("english"))

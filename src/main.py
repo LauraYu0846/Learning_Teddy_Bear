@@ -8,7 +8,7 @@ phrase = transcribe_live_audio(language="english")
 output_language = "spanish"
 text = f"{phrase} in {output_language} is"
 
-# create audio file and play it
+# create audio file and play i
 text_to_audio(text)
 play_audio_file()
 
