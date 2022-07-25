@@ -4,12 +4,26 @@ from ibm_watson.websocket import RecognizeCallback, AudioSource
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 from environment import stt_key, stt_url
 from queue import Queue, Full
-from websocket._exceptions import WebSocketConnectionClosedException
+import os, sys, contextlib
 
 # initialise everything
 CHUNK = 1024
 BUFF_MAX_SIZE = CHUNK * 10
 q = Queue(maxsize=int(round(BUFF_MAX_SIZE / CHUNK)))
+
+# suppresses ALS messages
+@contextlib.contextmanager
+def ignore_stderr():
+    devnull = os.open(os.devnull, os.O_WRONLY)
+    old_stderr = os.dup(2)
+    sys.stderr.flush()
+    os.dup2(devnull, 2)
+    os.close(devnull)
+    try:
+        yield
+    finally:
+        os.dup2(old_stderr, 2)
+        os.close(old_stderr)
 
 
 def setup_stt():
@@ -24,9 +38,9 @@ def setup_stt():
 
 # define callback for the speech to text service
 class MyRecognizeCallback(RecognizeCallback):
-    def __init__(self):
-        RecognizeCallback.__init__(self)
-        self.data = ""
+    def _init_(self):
+        RecognizeCallback._init_(self)
+        self.data = {}
         self.inactivity = False
 
     # def on_transcription(self, transcript):
@@ -35,8 +49,8 @@ class MyRecognizeCallback(RecognizeCallback):
     def on_connected(self):
         print('Connection was successful')
 
-    # def on_error(self, error):
-    #     print('Error received: {}'.format(error))
+    def on_error(self, error):
+        print('Error received: {}'.format(error))
 
     def on_inactivity_timeout(self, error):
         print('Inactivity timeout: {}'.format(error))
@@ -64,7 +78,7 @@ def pyaudio_callback(in_data, frame_count, time_info, status):
         q.put(in_data)
     except Full:
         pass  # discard
-    return (None, pyaudio.paContinue)
+    return None, pyaudio.paContinue
 
 
 def recognize_using_weboscket(language_model, audio_source):
@@ -79,7 +93,6 @@ def recognize_using_weboscket(language_model, audio_source):
                                                         inactivity_timeout=2,
                                                         model=language_model
                                                         )
-
     return response
 
 
@@ -88,8 +101,10 @@ def transcribe_live_audio(language="english"):
                   "spanish": "es-ES_BroadbandModel",
                   "french": "fr-FR_BroadbandModel"
                   }
+
     # instantiate pyaudio
-    audio = pyaudio.PyAudio()
+    with ignore_stderr():
+        audio = pyaudio.PyAudio()
 
     # open stream using callback
     stream = audio.open(
@@ -100,7 +115,6 @@ def transcribe_live_audio(language="english"):
         frames_per_buffer=CHUNK,
         stream_callback=pyaudio_callback,
         start=False
-
     )
 
     stream.start_stream()
