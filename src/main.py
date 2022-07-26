@@ -1,14 +1,12 @@
-from tts import text_to_audio, play_audio_file
 from stt import transcribe_live_audio
 from assistant import new_session, message, get_context_variables
 from translator import translate_language
 import utilities
-
-
-session_id = new_session()
-
+import json
+import time
 
 def watson_conversation():
+    session_id = new_session()
     for i in range(4):
         if i == 0:
             user_message = ""
@@ -20,58 +18,43 @@ def watson_conversation():
 
     return get_context_variables(session_id)
 
-print(watson_conversation())
 
-# # Greeting part
-# # Flow 1 - Asking name
-# watson_response = message(session_id, "")
-#
-# utilities.speaker(watson_response)
-#
-# user_message = transcribe_live_audio(language="english")
-#
-# # Flow 2 - Asking language
-# watson_response = message(session_id, user_message)
-#
-# utilities.speaker(watson_response)
-#
-# user_message = transcribe_live_audio(language="english")
-#
-# # Flow 3 - Asking difficulty
-# watson_response = message(session_id, user_message)
-#
-# utilities.speaker(watson_response)
-#
-# user_message = transcribe_live_audio(language="english")
-#
-# # Confirming variables
-# watson_response = message(session_id, user_message)
-#
-# utilities.speaker(watson_response)
-#
-# # print(get_context_variables(session_id))
-#
-# #
-# # # with open
-# # with open('questions.json') as questionbank:
-# #     q = json.load(questionbank)
-# #     print(q)
-# #
-#
-#
-# # # define text string
-# phrase = transcribe_live_audio(language="english")
-#
-# output_language = "spanish"
-# text = f"{phrase} in {output_language} is"
-#
-# # create audio file and play i
-# text_to_audio(text)
-# play_audio_file()
-#
-# spanish_text = translate_language(phrase, "spanish")
-# text_to_audio(spanish_text, "spanish")
-# play_audio_file()
-# #
-#
-# # json file to contain all the questions (just created at pycharm)
+def learn_language(context_variables, question_dict):
+    question = utilities.random_question(question_dict, context_variables["difficulty"])[0]
+
+    # speak the question from question bank in english
+    utilities.speaker(question)
+
+    answer = transcribe_live_audio(language="english")
+
+    # kids answer the question
+    output_language = context_variables["language"].lower()
+    text = f"{answer} in {output_language} is"
+
+    # Watson translate the answer
+    utilities.speaker(text)
+
+    translated_text = translate_language(answer, output_language)
+    utilities.speaker(translated_text, output_language)
+
+    # Tell user to repeat
+    utilities.speaker("Please repeat after me")
+    time.sleep(5)
+
+
+    # wait the user to repeat the new language
+
+
+def main():
+    context_variables = watson_conversation()
+
+    with open('questions.json') as questionbank:
+        question_dict = json.load(questionbank)
+
+    for i in range(utilities.get_num_questions(context_variables["difficulty"])):
+        learn_language(context_variables, question_dict)
+
+
+# json file to contain all the questions (just created at pycharm)
+
+main()

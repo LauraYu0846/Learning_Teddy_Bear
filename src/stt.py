@@ -5,6 +5,7 @@ from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 from environment import stt_key, stt_url
 from queue import Queue, Full
 import os, sys, contextlib
+from utilities import speaker
 
 # initialise everything
 CHUNK = 1024
@@ -133,8 +134,10 @@ def transcribe_live_audio(language="english"):
     try:
         text_string = mycallback.data['results'][0]["alternatives"][0]["transcript"]
 
-    except TypeError:
+    except (TypeError, AttributeError):
         text_string = ""
+        speaker("Sorry, I have not heard you for one minute. Bye bye. ")
+        exit()
 
     return text_string
 
