@@ -14,6 +14,7 @@ def setup_assistant():
     return assistant
 
 
+
 def send_stateless_message(text):
     assistant = setup_assistant()
 
@@ -33,8 +34,9 @@ def new_session():
     response = assistant.create_session(
         assistant_id=assistant_id
     ).get_result()
-
+    print(response["session_id"])
     return response["session_id"]
+
 
 
 def message(session_id, text):
@@ -72,10 +74,9 @@ def get_context_variables(session_id):
     return response["context"]["skills"]["main skill"]["user_defined"]
 
 
-text = ""
-message("f3cee332-e684-4333-b07c-900d43be6f2d", text)
 
-# Create a session at beginning of program
+# text = ""
+# message("370b9b86-678d-45c0-a585-9c3d8cebe3de", text)
 
 
 # print(get_context_variables("f3cee332-e684-4333-b07c-900d43be6f2d"))
