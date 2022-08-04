@@ -1,22 +1,30 @@
 from stt import transcribe_live_audio
-from assistant import new_session, message, get_context_variables
+from assistant import new_session, message
 from translator import translate_language
 import utilities
 import json
 import time
 
+
 def watson_conversation():
     session_id = new_session()
-    for i in range(4):
-        if i == 0:
+
+    list_of_options = [
+        ["spanish", "french"], ["easy", "medium", "hard"]
+    ]
+
+    first_message = True
+    context_variables = False
+    while not context_variables:
+        if first_message:
             user_message = ""
+            first_message = False
         else:
             user_message = transcribe_live_audio(language="english")
-
-        watson_response = message(session_id, user_message)
+        watson_response, context_variables = message(session_id, user_message)
         utilities.speaker(watson_response)
 
-    return get_context_variables(session_id)
+    return context_variables
 
 
 def learn_language(context_variables, question_dict):
@@ -48,13 +56,19 @@ def learn_language(context_variables, question_dict):
 def main():
     context_variables = watson_conversation()
 
-    with open('questions.json') as questionbank:
-        question_dict = json.load(questionbank)
+    if context_variables['activity'] == "language":
+        with open('questions.json') as questionbank:
+            question_dict = json.load(questionbank)
 
-    for i in range(utilities.get_num_questions(context_variables["difficulty"])):
-        learn_language(context_variables, question_dict)
+        for i in range(utilities.get_num_questions(context_variables["difficulty"])):
+            learn_language(context_variables, question_dict)
 
 
 # json file to contain all the questions (just created at pycharm)
+
+
+
+# listen_forever()
+
 
 main()

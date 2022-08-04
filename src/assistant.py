@@ -53,25 +53,31 @@ def message(session_id, text):
     ).get_result()
 
 
-    return response["output"]["generic"][0]["text"]
+    return (response["output"]["generic"][0]["text"], get_context_variables_from_response(response))
 
     # print(json.dumps(response, indent=2))
 
 
-def get_context_variables(session_id):
-    assistant = setup_assistant()
+def get_context_variables_from_response(response):
+    # returns false if not all context variables are present, otherwise returns a dict of all context variables
+    try:
+        context_variables = response["context"]["skills"]["main skill"]["user_defined"]
+        print("context variables: ", context_variables, "\n")
+    except (TypeError, KeyError):
+        return False
 
-    response = assistant.message(
-        assistant_id=assistant_id,
-        session_id=session_id,
-        input={
-            'message_type': 'text',
-            'text': "",
-            'options': {'return_context': True}
-        }
-    ).get_result()
+    if context_variables.get('activity') == 'language':
+        required_variables = {'name', 'activity', 'language', 'difficulty'}
 
-    return response["context"]["skills"]["main skill"]["user_defined"]
+    elif context_variables.get('activity') == 'music':
+        required_variables = {'name', 'activity', 'song'}  # change this as u need
+    else:  # activity is story
+        required_variables = {'name', 'activity', 'story'}  # change this as u need
+
+    if required_variables.issubset(set(context_variables)):
+        return context_variables
+    else:
+        return False
 
 
 

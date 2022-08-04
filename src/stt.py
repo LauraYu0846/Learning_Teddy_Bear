@@ -43,6 +43,7 @@ class MyRecognizeCallback(RecognizeCallback):
         RecognizeCallback._init_(self)
         self.data = {}
         self.inactivity = False
+        self.main_program_active = False
 
     # def on_transcription(self, transcript):
     #     print("THIS IS THE TRANSCRIPT", transcript)
@@ -60,12 +61,19 @@ class MyRecognizeCallback(RecognizeCallback):
     def on_listening(self):
         print('Service is listening')
 
-    # def on_hypothesis(self, hypothesis):
-    #     print(hypothesis)
+    def on_hypothesis(self, hypothesis):
+        if "teddy" in hypothesis:
+            print(hypothesis)
+            print("I heard Teddy")
+            self.main_program_active = True
+            print(self.main_program_active)
+            print("\n")
+
 
     def on_data(self, data):
         # print(data)
         self.data = data
+
 
     def on_close(self):
         print("Connection closed")
@@ -82,7 +90,7 @@ def pyaudio_callback(in_data, frame_count, time_info, status):
     return None, pyaudio.paContinue
 
 
-def recognize_using_weboscket(language_model, audio_source):
+def recognize_using_weboscket(language_model, audio_source, timeout=2):
     # initialize speech to text service
     speech_to_text = setup_stt()
 
@@ -91,13 +99,13 @@ def recognize_using_weboscket(language_model, audio_source):
                                                         recognize_callback=mycallback,
                                                         interim_results=True,
                                                         background_audio_suppression=0.5,
-                                                        inactivity_timeout=2,
+                                                        inactivity_timeout=timeout,
                                                         model=language_model
                                                         )
     return response
 
 
-def transcribe_live_audio(language="english"):
+def transcribe_live_audio(language="english", timeout=2):
     model_dict = {"english": "en-GB_BroadbandModel",
                   "spanish": "es-ES_BroadbandModel",
                   "french": "fr-FR_BroadbandModel"
@@ -120,7 +128,7 @@ def transcribe_live_audio(language="english"):
 
     stream.start_stream()
     audio_source = AudioSource(q, True, True)
-    recognize_using_weboscket(model_dict[language], audio_source)
+    recognize_using_weboscket(model_dict[language], audio_source, timeout)
 
     while not mycallback.inactivity:
         pass
@@ -141,4 +149,40 @@ def transcribe_live_audio(language="english"):
 
     return text_string
 
-# print(transcribe_live_audio("english"))
+
+def listen_forever(language="english"):
+    model_dict = {"english": "en-GB_BroadbandModel",
+                  "spanish": "es-ES_BroadbandModel",
+                  "french": "fr-FR_BroadbandModel"
+                  }
+
+    # instantiate pyaudio
+    with ignore_stderr():
+        audio = pyaudio.PyAudio()
+
+    # open stream using callback
+    stream = audio.open(
+        format=pyaudio.paInt16,
+        channels=1,
+        rate=44100,
+        input=True,
+        frames_per_buffer=CHUNK,
+        stream_callback=pyaudio_callback,
+        start=False
+    )
+
+    stream.start_stream()
+    audio_source = AudioSource(q, True, True)
+    recognize_using_weboscket(model_dict[language], audio_source, -1)
+
+    while not mycallback.main_program_active:
+        pass
+
+    print("FINISHED")
+    # stop recording
+    stream.stop_stream()
+    stream.close()
+    audio.terminate()
+    audio_source.completed_recording()
+
+# print(transcribe_live_audio("english", timeout=30))
