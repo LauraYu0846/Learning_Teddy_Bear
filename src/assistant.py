@@ -14,7 +14,6 @@ def setup_assistant():
     return assistant
 
 
-
 def send_stateless_message(text):
     assistant = setup_assistant()
 
@@ -62,7 +61,7 @@ def get_context_variables_from_response(response):
     # returns false if not all context variables are present, otherwise returns a dict of all context variables
     try:
         context_variables = response["context"]["skills"]["main skill"]["user_defined"]
-        print("context variables: ", context_variables, "\n")
+        # print("context variables: ", context_variables, "\n")
     except (TypeError, KeyError):
         return False
 
@@ -70,11 +69,12 @@ def get_context_variables_from_response(response):
         required_variables = {'name', 'activity', 'language', 'difficulty'}
 
     elif context_variables.get('activity') == 'music':
-        required_variables = {'name', 'activity', 'song'}  # change this as u need
+        required_variables = {'name', 'activity', 'language'}
     else:  # activity is story
-        required_variables = {'name', 'activity', 'story'}  # change this as u need
+        required_variables = {'name', 'activity', 'story'}
 
     if required_variables.issubset(set(context_variables)):
+        context_variables = {k: v.lower() for k, v in context_variables.items()}
         return context_variables
     else:
         return False
