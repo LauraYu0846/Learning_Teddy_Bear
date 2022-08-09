@@ -2,6 +2,7 @@ from stt import transcribe_live_audio
 from assistant import new_session, message
 from translator import translate_language
 from playmusic import play_music_randomly
+from playstory import play_story_randomly
 import utilities
 import json
 import time
@@ -50,10 +51,16 @@ def learn_language(context_variables, question_dict):
     utilities.speaker("Please repeat after me")
     time.sleep(5)
 
+    # Checking the answer is correct
+    user_answer = transcribe_live_audio(language=output_language)
 
-    # wait the user to repeat the new language
-
-
+    count = 0
+    print("translated text:", translated_text)
+    while user_answer != translated_text and count < 3:
+        utilities.speaker(translated_text, output_language)
+        user_answer = transcribe_live_audio(language=output_language)
+        count += 1
+        print(user_answer, count)
 
 
 def main():
@@ -70,7 +77,9 @@ def main():
     elif context_variables['activity'] == "music":
         play_music_randomly(context_variables["language"])
 
-# json file to contain all the questions (just created at pycharm)
+    elif context_variables['activity'] == "story":
+        play_story_randomly(context_variables["language"])
+
 
 
 

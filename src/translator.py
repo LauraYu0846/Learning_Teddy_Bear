@@ -25,6 +25,7 @@ def translate_language(text, output_language):
     language_translator = setup_lt()
     translation = language_translator.translate(
         text=text,
+        source='en',
         target=language_dict[output_language]).get_result()
 
     text = translation['translations'][0]['translation']
