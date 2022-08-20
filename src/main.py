@@ -1,4 +1,4 @@
-from stt import transcribe_live_audio
+from stt import transcribe_live_audio, activate, stop_program
 from assistant import new_session, message
 from translator import translate_language
 from playmusic import play_music_randomly
@@ -6,14 +6,15 @@ from playstory import play_story_randomly
 import utilities
 import json
 import time
+from threading import Thread
 
 
 def watson_conversation():
     session_id = new_session()
 
-    list_of_options = [
-        ["english", "spanish", "french"], ["easy", "medium", "hard"]
-    ]
+    # list_of_options = [
+    #     ["english", "spanish", "french"], ["one", "two", "three"]
+    # ]
 
     first_message = True
     context_variables = False
@@ -64,6 +65,8 @@ def learn_language(context_variables, question_dict):
 
 
 def main():
+    start_program()
+
     context_variables = watson_conversation()
     print(context_variables)
 
@@ -81,9 +84,11 @@ def main():
         play_story_randomly(context_variables["language"])
 
 
+def start_program():
+    active = False
+    while not active:
+        active = activate()
+    print("Program has started")
+    return True
 
-
-# listen_forever()
-
-
-main()
+# main()

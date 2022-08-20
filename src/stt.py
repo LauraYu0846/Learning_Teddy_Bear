@@ -6,6 +6,7 @@ from environment import stt_key, stt_url
 from queue import Queue, Full
 import os, sys, contextlib
 from utilities import speaker
+import speech_recognition as sr
 
 # initialise everything
 CHUNK = 1024
@@ -150,39 +151,72 @@ def transcribe_live_audio(language="english", timeout=2):
     return text_string
 
 
-def listen_forever(language="english"):
-    model_dict = {"english": "en-GB_BroadbandModel",
-                  "spanish": "es-ES_BroadbandModel",
-                  "french": "fr-FR_BroadbandModel"
-                  }
-
-    # instantiate pyaudio
-    with ignore_stderr():
-        audio = pyaudio.PyAudio()
-
-    # open stream using callback
-    stream = audio.open(
-        format=pyaudio.paInt16,
-        channels=1,
-        rate=44100,
-        input=True,
-        frames_per_buffer=CHUNK,
-        stream_callback=pyaudio_callback,
-        start=False
-    )
-
-    stream.start_stream()
-    audio_source = AudioSource(q, True, True)
-    recognize_using_weboscket(model_dict[language], audio_source, -1)
-
-    while not mycallback.main_program_active:
-        pass
-
-    print("FINISHED")
-    # stop recording
-    stream.stop_stream()
-    stream.close()
-    audio.terminate()
-    audio_source.completed_recording()
+# def listen_forever(language="english"):
+#     model_dict = {"english": "en-GB_BroadbandModel",
+#                   "spanish": "es-ES_BroadbandModel",
+#                   "french": "fr-FR_BroadbandModel"
+#                   }
+#
+#     # instantiate pyaudio
+#     with ignore_stderr():
+#         audio = pyaudio.PyAudio()
+#
+#     # open stream using callback
+#     stream = audio.open(
+#         format=pyaudio.paInt16,
+#         channels=1,
+#         rate=44100,
+#         input=True,
+#         frames_per_buffer=CHUNK,
+#         stream_callback=pyaudio_callback,
+#         start=False
+#     )
+#
+#     stream.start_stream()
+#     audio_source = AudioSource(q, True, True)
+#     recognize_using_weboscket(model_dict[language], audio_source, -1)
+#
+#     while not mycallback.main_program_active:
+#         pass
+#
+#     print("FINISHED")
+#     # stop recording
+#     stream.stop_stream()
+#     stream.close()
+#     audio.terminate()
+#     audio_source.completed_recording()
 
 # print(transcribe_live_audio("english", timeout=30))
+
+
+
+import sys
+
+def activate():
+    command = take_command()
+    if 'teddy' in command:
+        return True
+    else:
+        return False
+
+def stop():
+    command = take_command()
+    if 'stop' in command:
+        sys.exit()
+    else:
+        return False
+
+def stop_program():
+    stopped = False
+    while not stopped:
+        stopped = stop()
+
+def take_command():
+    listener = sr.Recognizer()
+    try:
+        with sr.Microphone() as source:
+            voice = listener.listen(source)
+            command = listener.recognize_google(voice)
+    except:
+        command = ""
+    return command.lower()

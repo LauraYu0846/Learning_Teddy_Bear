@@ -17,6 +17,7 @@ def text_to_audio(text, language="english"):
     voice_dict = {"english": "en-GB_KateV3Voice",
                   "spanish": "es-ES_LauraV3Voice",
                   "french": "fr-FR_ReneeV3Voice"
+
                   }
 
     # Convert with a basic language model

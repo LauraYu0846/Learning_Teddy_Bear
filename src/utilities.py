@@ -9,8 +9,6 @@ def get_num_questions(difficulty):
     return len(q[difficulty])
 
 
-
-
 def random_question(question_dict, difficulty):
     delete_key = random.choice(list(question_dict[difficulty].keys()))
     question = question_dict[difficulty][delete_key]
