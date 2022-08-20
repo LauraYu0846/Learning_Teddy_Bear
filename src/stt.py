@@ -1,12 +1,16 @@
+import contextlib
+import os
+import sys
+from queue import Queue, Full
+
 import pyaudio
+import speech_recognition as sr
+from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 from ibm_watson import SpeechToTextV1
 from ibm_watson.websocket import RecognizeCallback, AudioSource
-from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
+
 from environment import stt_key, stt_url
-from queue import Queue, Full
-import os, sys, contextlib
 from utilities import speaker
-import speech_recognition as sr
 
 # initialise everything
 CHUNK = 1024
@@ -190,7 +194,6 @@ def transcribe_live_audio(language="english", timeout=2):
 
 
 
-import sys
 
 def activate():
     command = take_command()
@@ -202,21 +205,28 @@ def activate():
 def stop():
     command = take_command()
     if 'stop' in command:
-        sys.exit()
+        print("TRIED TO STOP PROGRAM")
+        os._exit(0)
     else:
         return False
 
 def stop_program():
     stopped = False
     while not stopped:
+        # print('stop program is running')
         stopped = stop()
+
 
 def take_command():
     listener = sr.Recognizer()
     try:
         with sr.Microphone() as source:
+            listener.adjust_for_ambient_noise(source)
             voice = listener.listen(source)
             command = listener.recognize_google(voice)
     except:
         command = ""
+    print(command)
     return command.lower()
+
+# stop_program()

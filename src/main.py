@@ -78,10 +78,14 @@ def main():
             learn_language(context_variables, question_dict)
 
     elif context_variables['activity'] == "music":
-        play_music_randomly(context_variables["language"])
+        Thread(target=stop_program).start()
+        Thread(target=play_music_randomly, args=[context_variables["language"]]).start()
+        # play_music_randomly(context_variables["language"])
 
     elif context_variables['activity'] == "story":
-        play_story_randomly(context_variables["language"])
+        Thread(target=stop_program).start()
+        Thread(target=play_story_randomly, args=[context_variables["language"]]).start()
+        # play_story_randomly(context_variables["language"])
 
 
 def start_program():
@@ -91,4 +95,4 @@ def start_program():
     print("Program has started")
     return True
 
-# main()
+main()
