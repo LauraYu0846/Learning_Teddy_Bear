@@ -11,6 +11,8 @@ from ibm_watson.websocket import RecognizeCallback, AudioSource
 
 from environment import stt_key, stt_url
 from utilities import speaker
+import subprocess
+
 
 # initialise everything
 CHUNK = 1024
@@ -149,7 +151,7 @@ def transcribe_live_audio(language="english", timeout=2):
 
     except (TypeError, AttributeError):
         text_string = ""
-        speaker("Sorry, I have not heard you for one minute. Bye bye. ")
+        speaker("Sorry, I have not heard anything. Goodbye. ")
         exit()
 
     return text_string
@@ -202,13 +204,18 @@ def activate():
     else:
         return False
 
+
 def stop():
     command = take_command()
     if 'stop' in command:
+        subprocess.call(['killall', 'mpg123'])
         print("TRIED TO STOP PROGRAM")
+        # os.system("killall mpg123")
+        # pkill -STOP mpg123
         os._exit(0)
     else:
         return False
+
 
 def stop_program():
     stopped = False

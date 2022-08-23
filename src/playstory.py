@@ -1,5 +1,6 @@
 import random
 import os
+import subprocess
 
 
 def play_story_randomly(language):
@@ -9,4 +10,4 @@ def play_story_randomly(language):
     for i in range(len(story_files)):
         filename = random.choice(story_files)
         story_files.remove(filename)
-        os.system(f"mpg123 -q story/{language}_story/{filename}")
+        p = subprocess.call(['mpg123', '-q', f"story/{language}_story/{filename}"])

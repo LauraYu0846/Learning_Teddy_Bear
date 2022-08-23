@@ -7,14 +7,11 @@ import utilities
 import json
 import time
 from threading import Thread
+import os
 
 
 def watson_conversation():
     session_id = new_session()
-
-    # list_of_options = [
-    #     ["english", "spanish", "french"], ["one", "two", "three"]
-    # ]
 
     first_message = True
     context_variables = False
@@ -37,6 +34,9 @@ def learn_language(context_variables, question_dict):
     utilities.speaker(question)
 
     answer = transcribe_live_audio(language="english")
+    if "stop" in answer:
+        os._exit(0)
+
 
     # kids answer the question
     output_language = context_variables["language"]
@@ -50,18 +50,27 @@ def learn_language(context_variables, question_dict):
 
     # Tell user to repeat
     utilities.speaker("Please repeat after me")
-    time.sleep(5)
+    time.sleep(2)
 
     # Checking the answer is correct
-    user_answer = transcribe_live_audio(language=output_language)
+    # user_repeat = transcribe_live_audio(language=output_language)
+    # print("user input:", user_repeat)
+    # print(len(user_repeat))
 
+    user_answer = ""
     count = 0
-    print("translated text:", translated_text)
-    while user_answer != translated_text and count < 3:
+    while translated_text not in user_answer and count < 3:
         utilities.speaker(translated_text, output_language)
         user_answer = transcribe_live_audio(language=output_language)
+
+        print("user input:", user_answer)
+        print(len(user_answer))
+
+        if len(user_answer) == 0:
+            os._exit(0)
+
+        user_answer = ''
         count += 1
-        print(user_answer, count)
 
 
 def main():
