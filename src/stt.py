@@ -1,17 +1,16 @@
 import contextlib
 import os
 import sys
-from queue import Queue, Full
-
 import pyaudio
 import speech_recognition as sr
+import subprocess
+from queue import Queue, Full
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 from ibm_watson import SpeechToTextV1
 from ibm_watson.websocket import RecognizeCallback, AudioSource
-
 from environment import stt_key, stt_url
 from utilities import speaker
-import subprocess
+
 
 
 # initialise everything

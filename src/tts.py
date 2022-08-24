@@ -1,7 +1,8 @@
+import os
 from ibm_watson import TextToSpeechV1
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 from environment import tts_key, tts_url
-import os
+
 
 
 # Setup Service

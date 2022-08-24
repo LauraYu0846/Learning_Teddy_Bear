@@ -31,4 +31,3 @@ def translate_language(text, output_language):
     text = translation['translations'][0]['translation']
 
     return text
-

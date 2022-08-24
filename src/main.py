@@ -1,13 +1,13 @@
+import utilities
+import json
+import time
+import os
 from stt import transcribe_live_audio, activate, stop_program
 from assistant import new_session, message
 from translator import translate_language
 from playmusic import play_music_randomly
 from playstory import play_story_randomly
-import utilities
-import json
-import time
 from threading import Thread
-import os
 
 
 def watson_conversation():
