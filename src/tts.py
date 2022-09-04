@@ -4,7 +4,6 @@ from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 from environment import tts_key, tts_url
 
 
-
 # Setup Service
 def setup_tts():
     authenticator = IAMAuthenticator(tts_key)
@@ -27,7 +26,7 @@ def text_to_audio(text, language="english"):
         audio_file.write(res.content)
 
 
-def play_audio_file():
+def play_audio_file(filename="speech.mp3"):
     #  Try this for raspberry pi
     # apt install mpg123
-    os.system("mpg123 -q speech.mp3")
+    os.system(f"mpg123 -q {filename}")

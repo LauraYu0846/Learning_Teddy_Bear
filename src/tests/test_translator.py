@@ -1,10 +1,11 @@
 import unittest
 from translator import translate_language
+import warnings
 
 
 class TranslatorTest(unittest.TestCase):
     def setUp(self):
-        pass
+        warnings.simplefilter('ignore', ResourceWarning)
 
     def tearDown(self):
         pass
