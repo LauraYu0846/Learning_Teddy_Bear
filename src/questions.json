@@ -1,0 +1,24 @@
+{
+ "one": {
+  "age": "How old are you?"
+
+ },
+ "two": {
+  "location": "Where are you?",
+  "color": "What is your favorite color",
+  "flower": "What is your favorite flower",
+  "weather": "How was today's weather",
+  "food": "What is your favorite food",
+  "sport": "What is your favorite sport",
+  "hobby": "What is your hobby",
+  "season": "What is your favorite season",
+  "hat": "What do you wear on your head"
+ },
+ "three": {
+  "thing": "What was the favorite thing you did today",
+  "subject": "What subjects did you do at school?",
+  "homework": "What homework do you have to do today?",
+  "homework2": "Have you completed your homework?",
+  "fork": "What do you do with a fork"
+ }
+}

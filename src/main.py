@@ -59,10 +59,10 @@ def learn_language(context_variables, question_dict):
 
     user_answer = ""
     count = 0
-    while translated_text not in user_answer and count < 3:
+    while translated_text not in user_answer and count < 1:
         utilities.speaker(translated_text, output_language)
         user_answer = transcribe_live_audio(language=output_language)
-
+            
         print("user input:", user_answer)
         print(len(user_answer))
 
@@ -104,4 +104,7 @@ def start_program():
     print("Program has started")
     return True
 
-main()
+
+if __name__ == "__main__":
+    while True:
+        main()

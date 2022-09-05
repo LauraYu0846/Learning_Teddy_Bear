@@ -24,9 +24,8 @@ def send_stateless_message(text):
         input=MessageInputStateless(text=text)
     ).get_result()
     watson_text_response = response["output"]["generic"][0]["text"]
-    print(watson_text_response)
+    return watson_text_response
 
-# send_stateless_message("hello")
 
 def new_session():
     assistant = setup_assistant()
@@ -36,7 +35,6 @@ def new_session():
     ).get_result()
     print(response["session_id"])
     return response["session_id"]
-
 
 
 def message(session_id, text):
@@ -71,6 +69,7 @@ def get_context_variables_from_response(response):
 
     elif context_variables.get('activity') == 'music':
         required_variables = {'activity', 'language'}
+
     else:
         required_variables = {'activity', 'language'}
 
@@ -83,6 +82,5 @@ def get_context_variables_from_response(response):
 
 # text = ""
 # message("370b9b86-678d-45c0-a585-9c3d8cebe3de", text)
-
 
 # print(get_context_variables("f3cee332-e684-4333-b07c-900d43be6f2d"))
