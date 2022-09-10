@@ -9,13 +9,13 @@ from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 from ibm_watson import SpeechToTextV1
 from ibm_watson.websocket import RecognizeCallback, AudioSource
 from environment import stt_key, stt_url
-from utilities import speaker
 
 
 # initialise everything
 CHUNK = 1024
 BUFF_MAX_SIZE = CHUNK * 10
 q = Queue(maxsize=int(round(BUFF_MAX_SIZE / CHUNK)))
+
 
 # suppresses ALS messages
 @contextlib.contextmanager
@@ -95,6 +95,7 @@ def pyaudio_callback(in_data, frame_count, time_info, status):
     return None, pyaudio.paContinue
 
 
+# this function will initiate the recognize service and pass in the AudioSource
 def recognize_using_weboscket(language_model, audio_source, timeout=3):
     # initialize speech to text service
     speech_to_text = setup_stt()
@@ -171,8 +172,6 @@ def stop():
     if 'stop' in command:
         subprocess.call(['killall', 'mpg123'])
         print("TRIED TO STOP PROGRAM")
-        # os.system("killall mpg123")
-        # pkill -STOP mpg123
         os._exit(0)
     else:
         return False
@@ -181,21 +180,7 @@ def stop():
 def stop_program():
     stopped = False
     while not stopped:
-        # print('stop program is running')
         stopped = stop()
-
-
-# def take_command():
-#     listener = sr.Recognizer()
-#     try:
-#         with sr.Microphone() as source:
-#             listener.adjust_for_ambient_noise(source)
-#             voice = listener.listen(source)
-#             command = listener.recognize_google(voice)
-#     except:
-#         command = ""
-#     print(command)
-#     return command.lower()
 
 
 def take_command():

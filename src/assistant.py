@@ -2,11 +2,11 @@ import json
 from ibm_watson import AssistantV2
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 from ibm_watson.assistant_v2 import MessageInputStateless, MessageInputOptions
-from environment import assitant_key, assitant_url, assistant_id
+from environment import assistant_key, assistant_url, assistant_id
 
 
 def setup_assistant():
-    authenticator = IAMAuthenticator(assitant_key)
+    authenticator = IAMAuthenticator(assistant_key)
     assistant = AssistantV2(
         version='2021-11-27',
         authenticator=authenticator

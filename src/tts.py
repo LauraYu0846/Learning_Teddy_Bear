@@ -17,7 +17,6 @@ def text_to_audio(text, language="english"):
     voice_dict = {"english": "en-GB_KateV3Voice",
                   "spanish": "es-ES_LauraV3Voice",
                   "french": "fr-FR_ReneeV3Voice"
-
                   }
 
     # Convert with a basic language model
@@ -27,6 +26,4 @@ def text_to_audio(text, language="english"):
 
 
 def play_audio_file(filename="speech.mp3"):
-    #  Try this for raspberry pi
-    # apt install mpg123
     os.system(f"mpg123 -q {filename}")
