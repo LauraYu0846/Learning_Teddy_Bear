@@ -18,21 +18,21 @@ sudo apt-get install python3-pip
 4)	Thonny is already installed on Raspberry Pi OS and created a .env file in the src folder and includes the environment variables for all the needed services:
 
 Speech_To_Text:
-STT_KEY=
-STT_URL=
+STT_KEY= ///
+STT_URL= ///
 
 Text_To_Speech:
-TTS_KEY=
-TTS_URL=
+TTS_KEY= ///
+TTS_URL= ///
 
 Language_Translator:
-LT_KEY=
-LT_URL=
+LT_KEY= ///
+LT_URL= ///
 
 Watson_Assistant:
-ASSISTANT_KEY=
-ASSISTANT_URL=
-ASSISTANT_ID=
+ASSISTANT_KEY= /// 
+ASSISTANT_URL= /// 
+ASSISTANT_ID= ///
 
 5)	Before Running the main.py, open the terminal to run these two commands to install the pyaudio and mpg123 which will be used on the project.
 
