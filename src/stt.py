@@ -11,13 +11,11 @@ from ibm_watson.websocket import RecognizeCallback, AudioSource
 from environment import stt_key, stt_url
 
 
-# initialise everything
 CHUNK = 1024
 BUFF_MAX_SIZE = CHUNK * 10
 q = Queue(maxsize=int(round(BUFF_MAX_SIZE / CHUNK)))
 
 
-# suppresses ALS messages
 @contextlib.contextmanager
 def ignore_stderr():
     devnull = os.open(os.devnull, os.O_WRONLY)
@@ -42,16 +40,12 @@ def setup_stt():
     return speech_to_text
 
 
-# define callback for the speech to text service
 class MyRecognizeCallback(RecognizeCallback):
     def _init_(self):
         RecognizeCallback._init_(self)
         self.data = {}
         self.inactivity = False
         self.main_program_active = False
-
-    # def on_transcription(self, transcript):
-    #     print("THIS IS THE TRANSCRIPT", transcript)
 
     def on_connected(self):
         print('Connection was successful')
@@ -76,7 +70,6 @@ class MyRecognizeCallback(RecognizeCallback):
 
 
     def on_data(self, data):
-        # print(data)
         self.data = data
 
 
@@ -91,13 +84,12 @@ def pyaudio_callback(in_data, frame_count, time_info, status):
     try:
         q.put(in_data)
     except Full:
-        pass  # discard
+        pass
     return None, pyaudio.paContinue
 
 
-# this function will initiate the recognize service and pass in the AudioSource
 def recognize_using_weboscket(language_model, audio_source, timeout=3):
-    # initialize speech to text service
+
     speech_to_text = setup_stt()
 
     response = speech_to_text.recognize_using_websocket(audio=audio_source,
@@ -117,18 +109,15 @@ def transcribe_live_audio(language="english", timeout=2):
                   "french": "fr-FR_BroadbandModel",
                   "japanese": "ja-JP_BroadbandModel",
                   "korea": "ko-KR_BroadbandModel",
-                  "chinese": "zh-CN_BroadbandModel",
                   "german": "de-DE_BroadbandModel",
                   "italian": "it-IT_BroadbandModel",
-                  "Portuguese": "pt-BR_BroadbandModel",
-                  "Dutch": "nl-NL_BroadbandModel"
+                  "portuguese": "pt-BR_BroadbandModel",
+                  "dutch": "nl-NL_BroadbandModel"
                   }
 
-    # instantiate pyaudio
     with ignore_stderr():
         audio = pyaudio.PyAudio()
 
-    # open stream using callback
     stream = audio.open(
         format=pyaudio.paInt16,
         channels=1,
@@ -146,7 +135,6 @@ def transcribe_live_audio(language="english", timeout=2):
     while not mycallback.inactivity:
         pass
 
-    # stop recording
     stream.stop_stream()
     stream.close()
     audio.terminate()
@@ -157,8 +145,6 @@ def transcribe_live_audio(language="english", timeout=2):
 
     except (TypeError, AttributeError):
         text_string = "No"
-#         speaker("Sorry, I have not heard anything. Goodbye. ")
-#         exit()
 
     if "stop" in text_string:
         os._exit(0)

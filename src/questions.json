@@ -1,7 +1,9 @@
 {
  "one": {
   "age": "How old are you?",
-  "one": "How many hands do you have?"
+  "one": "How many hands do you have?",
+  "two": "How many eyes do you have",
+  "ten": "How many fingers do you have"
  },
  "two": {
   "location": "Where are you?",
