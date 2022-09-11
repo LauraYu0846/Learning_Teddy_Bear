@@ -11,14 +11,13 @@ def setup_assistant():
         version='2021-11-27',
         authenticator=authenticator
     )
-    assistant.set_service_url(assitant_url)
+    assistant.set_service_url(assistant_url)
     return assistant
 
 
 def send_stateless_message(text):
     assistant = setup_assistant()
 
-    # # send message to watson assistant
     response = assistant.message_stateless(
         assistant_id=assistant_id,
         input=MessageInputStateless(text=text)
@@ -53,11 +52,8 @@ def message(session_id, text):
 
     return (response["output"]["generic"][0]["text"], get_context_variables_from_response(response))
 
-    # print(json.dumps(response, indent=2))
-
 
 def get_context_variables_from_response(response):
-    # returns false if not all context variables are present, otherwise returns a dict of all context variables
     try:
         context_variables = response["context"]["skills"]["main skill"]["user_defined"]
         print("context variables: ", context_variables, "\n")
@@ -79,8 +75,3 @@ def get_context_variables_from_response(response):
         return context_variables
     else:
         return False
-
-# text = ""
-# message("370b9b86-678d-45c0-a585-9c3d8cebe3de", text)
-
-# print(get_context_variables("f3cee332-e684-4333-b07c-900d43be6f2d"))

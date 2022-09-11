@@ -30,28 +30,22 @@ def watson_conversation():
 def learn_language(context_variables, question_dict):
     question = utilities.random_question(question_dict, context_variables["difficulty"])[0]
 
-    # speak the question from question bank in english_song
     utilities.speaker(question)
 
     answer = transcribe_live_audio(language="english")
     if "stop" in answer:
         os._exit(0)
 
-
-    # kids answer the question
     output_language = context_variables["language"]
     text = f"{answer} in {output_language} is"
 
-    # Watson translate the answer
     utilities.speaker(text)
 
     translated_text = translate_language(answer, output_language)
     utilities.speaker(translated_text, output_language)
 
-    # Tell user to repeat
     utilities.speaker("Please repeat after me")
     time.sleep(2)
-
 
     user_answer = ""
     count = 0
@@ -85,12 +79,10 @@ def main():
     elif context_variables['activity'] == "music":
         Thread(target=stop_program).start()
         Thread(target=play_music_randomly, args=[context_variables["language"]]).start()
-        # play_music_randomly(context_variables["language"])
 
     elif context_variables['activity'] == "story":
         Thread(target=stop_program).start()
         Thread(target=play_story_randomly, args=[context_variables["language"]]).start()
-        # play_story_randomly(context_variables["language"])
 
 
 def start_program():
