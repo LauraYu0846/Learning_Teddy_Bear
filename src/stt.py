@@ -114,7 +114,14 @@ def recognize_using_weboscket(language_model, audio_source, timeout=3):
 def transcribe_live_audio(language="english", timeout=2):
     model_dict = {"english": "en-GB_BroadbandModel",
                   "spanish": "es-ES_BroadbandModel",
-                  "french": "fr-FR_BroadbandModel"
+                  "french": "fr-FR_BroadbandModel",
+                  "japanese": "ja-JP_BroadbandModel",
+                  "korea": "ko-KR_BroadbandModel",
+                  "chinese": "zh-CN_BroadbandModel",
+                  "german": "de-DE_BroadbandModel",
+                  "italian": "it-IT_BroadbandModel",
+                  "Portuguese": "pt-BR_BroadbandModel",
+                  "Dutch": "nl-NL_BroadbandModel"
                   }
 
     # instantiate pyaudio

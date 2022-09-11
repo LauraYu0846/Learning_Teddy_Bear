@@ -52,10 +52,6 @@ def learn_language(context_variables, question_dict):
     utilities.speaker("Please repeat after me")
     time.sleep(2)
 
-    # Checking the answer is correct
-    # user_repeat = transcribe_live_audio(language=output_language)
-    # print("user input:", user_repeat)
-    # print(len(user_repeat))
 
     user_answer = ""
     count = 0

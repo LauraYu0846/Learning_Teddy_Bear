@@ -19,7 +19,14 @@ def translate_language(text, output_language):
     language_dict = {
         "english": "en",
         "spanish": "es",
-        "french": "fr"
+        "french": "fr",
+        "japanese": "ja",
+        "korea": "ko",
+        "chinese": "zh",
+        "german": "de",
+        "italian": "it",
+        "Portuguese": "pt",
+        "Dutch": "nl"
     }
 
     language_translator = setup_lt()

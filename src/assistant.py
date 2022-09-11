@@ -43,7 +43,7 @@ def message(session_id, text):
     response = assistant.message(
         assistant_id=assistant_id,
         session_id=session_id,
-        input={
+        input= {
             'message_type': 'text',
             'text': text,
             'options': {'return_context': True}

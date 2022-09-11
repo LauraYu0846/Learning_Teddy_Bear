@@ -1,18 +1,17 @@
 {
  "one": {
-  "age": "How old are you?"
-
+  "age": "How old are you?",
+  "one": "How many hands do you have?"
  },
  "two": {
   "location": "Where are you?",
-  "color": "What is your favorite color",
   "flower": "What is your favorite flower",
   "weather": "How was today's weather",
   "food": "What is your favorite food",
   "sport": "What is your favorite sport",
   "hobby": "What is your hobby",
-  "season": "What is your favorite season",
-  "hat": "What do you wear on your head"
+  "color": "What is your favorite color",
+  "season": "What is your favorite season"
  },
  "three": {
   "thing": "What was the favorite thing you did today",
